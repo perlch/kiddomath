@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiddo Math</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    overflow-x: hidden;
+}
+
+#app {
+    min-height: 100vh;
+    position: relative;
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.back-btn {
+    background: #fff;
+    color: #333;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    font-family: 'Nunito', sans-serif;
+}
+
+.back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.back-btn:active {
+    transform: translateY(0);
+}
+
+/* Main Screen */
+.main-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3em;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2em;
+    margin-bottom: 40px;
+    font-weight: 400;
+}
+
+.operation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.operation-btn {
+    background: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 30px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Nunito', sans-serif;
+    min-height: 120px;
+}
+
+.operation-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.operation-btn:active {
+    transform: translateY(-2px);
+}
+
+.addition-btn { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+.subtraction-btn { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+.multiplication-btn { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+.division-btn { background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); }
+
+.operation-btn .math-symbol {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #333;
+    font-family: 'Fredoka One', cursive;
+}
+
+.operation-btn span {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+}
+
+.test-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 1.3em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    font-family: 'Nunito', sans-serif;
+}
+
+.test-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+/* Practice & Test Screens */
+h2 {
+    color: #fff;
+    font-size: 2em;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.score, .streak {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 20px;
+    border-radius: 15px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.test-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.test-progress, .test-score {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 20px;
+    border-radius: 15px;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.problem-container {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.problem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #333;
+    font-family: 'Fredoka One', cursive;
+}
+
+.problem .math-symbol {
+    color: #667eea;
+    font-size: 1.2em;
+}
+
+.answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.answer-btn {
+    background: #fff;
+    border: 3px solid #e0e0e0;
+    border-radius: 15px;
+    padding: 20px;
+    font-size: 1.5em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #333;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito', sans-serif;
+}
+
+.answer-btn:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.answer-btn:active {
+    transform: translateY(0);
+}
+
+.answer-btn.correct {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: #fff;
+    border-color: #4CAF50;
+}
+
+.answer-btn.incorrect {
+    background: linear-gradient(135deg, #f44336 0%, #da190b 100%);
+    color: #fff;
+    border-color: #f44336;
+}
+
+.answer-btn.disabled {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.feedback {
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    min-height: 30px;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.next-btn, .restart-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    padding: 18px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+    font-family: 'Nunito', sans-serif;
+}
+
+.next-btn:hover, .restart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+.test-results {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.test-results h3 {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-family: 'Fredoka One', cursive;
+}
+
+.final-score {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.score-message {
+    font-size: 1.3em;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .main-title {
+        font-size: 2.5em;
+    }
+    
+    .operation-grid {
+        gap: 15px;
+    }
+    
+    .operation-btn {
+        padding: 25px 15px;
+        min-height: 100px;
+    }
+    
+    .operation-btn .math-symbol {
+        font-size: 2em;
+    }
+    
+    .problem {
+        font-size: 2em;
+        gap: 15px;
+    }
+    
+    .answers-grid {
+        gap: 12px;
+    }
+    
+    .answer-btn {
+        padding: 15px;
+        font-size: 1.3em;
+        min-height: 60px;
+    }
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* PWA install button (optional) */
+.install-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #667eea;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 15px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    display: none;
+    font-family: 'Nunito', sans-serif;
+}
+
+.install-btn.show {
+    display: block;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+</style>
+<body>
+    <div id="app">
+        <!-- Main Screen -->
+        <div id="main-screen" class="screen active">
+            <div class="container">
+                <h1 class="main-title">Math Learning</h1>
+                <p class="subtitle">Choose an operation to practice</p>
+                
+                <div class="operation-grid">
+                    <button class="operation-btn addition-btn" onclick="navigateToOperation('addition')">
+                        <div class="math-symbol">+</div>
+                        <span>Addition</span>
+                    </button>
+                    
+                    <button class="operation-btn subtraction-btn" onclick="navigateToOperation('subtraction')">
+                        <div class="math-symbol">−</div>
+                        <span>Subtraction</span>
+                    </button>
+                    
+                    <button class="operation-btn multiplication-btn" onclick="navigateToOperation('multiplication')">
+                        <div class="math-symbol">×</div>
+                        <span>Multiplication</span>
+                    </button>
+                    
+                    <button class="operation-btn division-btn" onclick="navigateToOperation('division')">
+                        <div class="math-symbol">÷</div>
+                        <span>Division</span>
+                    </button>
+                </div>
+                
+                <button class="test-btn" onclick="navigateToTest()">
+                    <span>🎯 Take Test</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Practice Screen -->
+        <div id="practice-screen" class="screen">
+            <div class="container">
+                <div class="header">
+                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <h2 id="practice-title">Practice</h2>
+                </div>
+                
+                <div class="score-container">
+                    <div class="score">Score: <span id="practice-score">0</span></div>
+                    <div class="streak">Streak: <span id="practice-streak">0</span></div>
+                </div>
+                
+                <div class="problem-container">
+                    <div class="problem" id="practice-problem">
+                        <span id="practice-num1">5</span>
+                        <span class="math-symbol" id="practice-symbol">+</span>
+                        <span id="practice-num2">3</span>
+                        <span>=</span>
+                        <span>?</span>
+                    </div>
+                </div>
+                
+                <div class="answers-grid" id="practice-answers">
+                    <!-- Answer buttons will be generated here -->
+                </div>
+                
+                <div class="feedback" id="practice-feedback"></div>
+                
+                <button class="next-btn" id="practice-next-btn" onclick="generatePracticeProblem()" style="display: none;">
+                    Next Problem
+                </button>
+            </div>
+        </div>
+
+        <!-- Test Screen -->
+        <div id="test-screen" class="screen">
+            <div class="container">
+                <div class="header">
+                    <button class="back-btn" onclick="goBack()">← Back</button>
+                    <h2>Mixed Test</h2>
+                </div>
+                
+                <div class="test-info">
+                    <div class="test-progress">
+                        Question <span id="test-current">1</span> of <span id="test-total">10</span>
+                    </div>
+                    <div class="test-score">Score: <span id="test-score">0</span>/10</div>
+                </div>
+                
+                <div class="problem-container">
+                    <div class="problem" id="test-problem">
+                        <span id="test-num1">5</span>
+                        <span class="math-symbol" id="test-symbol">+</span>
+                        <span id="test-num2">3</span>
+                        <span>=</span>
+                        <span>?</span>
+                    </div>
+                </div>
+                
+                <div class="answers-grid" id="test-answers">
+                    <!-- Answer buttons will be generated here -->
+                </div>
+                
+                <div class="feedback" id="test-feedback"></div>
+                
+                <button class="next-btn" id="test-next-btn" onclick="nextTestQuestion()" style="display: none;">
+                    Next Question
+                </button>
+                
+                <div class="test-results" id="test-results" style="display: none;">
+                    <h3>Test Complete!</h3>
+                    <div class="final-score" id="final-score">Your Score: 0/10</div>
+                    <div class="score-message" id="score-message"></div>
+                    <button class="restart-btn" onclick="restartTest()">Try Again</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+
+// Global state management
+let currentScreen = 'main';
+let currentOperation = '';
+let practiceScore = 0;
+let practiceStreak = 0;
+let testQuestions = [];
+let currentTestQuestion = 0;
+let testScore = 0;
+let currentProblem = {};
+
+// Screen navigation
+function showScreen(screenId) {
+    console.log('Navigating to screen:', screenId);
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+    currentScreen = screenId;
+}
+
+function goBack() {
+    console.log('Going back from screen:', currentScreen);
+    if (currentScreen === 'practice-screen' || currentScreen === 'test-screen') {
+        showScreen('main-screen');
+    }
+}
+
+function navigateToOperation(operation) {
+    console.log('Navigating to operation:', operation);
+    currentOperation = operation;
+    practiceScore = 0;
+    practiceStreak = 0;
+    updatePracticeUI();
+    showScreen('practice-screen');
+    generatePracticeProblem();
+}
+
+function navigateToTest() {
+    console.log('Starting test mode');
+    initializeTest();
+    showScreen('test-screen');
+}
+
+// Utility functions
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getOperationTitle(operation) {
+    const titles = {
+        addition: 'Addition Practice',
+        subtraction: 'Subtraction Practice',
+        multiplication: 'Multiplication Practice',
+        division: 'Division Practice'
+    };
+    return titles[operation] || 'Practice';
+}
+
+function getOperationSymbol(operation) {
+    const symbols = {
+        addition: '+',
+        subtraction: '−',
+        multiplication: '×',
+        division: '÷'
+    };
+    return symbols[operation] || '+';
+}
+
+// Problem generation
+function generateProblem(operation) {
+    console.log('Generating problem for operation:', operation);
+    let num1, num2, answer, symbol;
+    
+    symbol = getOperationSymbol(operation);
+    
+    switch (operation) {
+        case 'addition':
+            num1 = getRandomInt(1, 50);
+            num2 = getRandomInt(1, 50);
+            answer = num1 + num2;
+            break;
+            
+        case 'subtraction':
+            num1 = getRandomInt(10, 50);
+            num2 = getRandomInt(1, num1);
+            answer = num1 - num2;
+            break;
+            
+        case 'multiplication':
+            num1 = getRandomInt(1, 12);
+            num2 = getRandomInt(1, 12);
+            answer = num1 * num2;
+            break;
+            
+        case 'division':
+            answer = getRandomInt(1, 12);
+            num2 = getRandomInt(1, 12);
+            num1 = answer * num2;
+            break;
+            
+        default:
+            num1 = getRandomInt(1, 20);
+            num2 = getRandomInt(1, 20);
+            answer = num1 + num2;
+            symbol = '+';
+    }
+    
+    return { num1, num2, operation, answer, symbol };
+}
+
+function generateAnswerOptions(correctAnswer, operation) {
+    console.log('Generating answer options for:', correctAnswer);
+    const options = [correctAnswer];
+    
+    while (options.length < 4) {
+        let wrongAnswer;
+        
+        switch (operation) {
+            case 'addition':
+                wrongAnswer = correctAnswer + getRandomInt(-10, 10);
+                break;
+            case 'subtraction':
+                wrongAnswer = correctAnswer + getRandomInt(-5, 5);
+                break;
+            case 'multiplication':
+                wrongAnswer = correctAnswer + getRandomInt(-20, 20);
+                break;
+            case 'division':
+                wrongAnswer = correctAnswer + getRandomInt(-3, 3);
+                break;
+            default:
+                wrongAnswer = correctAnswer + getRandomInt(-5, 5);
+        }
+        
+        if (wrongAnswer > 0 && !options.includes(wrongAnswer)) {
+            options.push(wrongAnswer);
+        }
+    }
+    
+    // Shuffle the options
+    for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+    }
+    
+    return options;
+}
+
+// Practice mode functions
+function updatePracticeUI() {
+    document.getElementById('practice-title').textContent = getOperationTitle(currentOperation);
+    document.getElementById('practice-score').textContent = practiceScore;
+    document.getElementById('practice-streak').textContent = practiceStreak;
+}
+
+function generatePracticeProblem() {
+    console.log('Generating practice problem');
+    currentProblem = generateProblem(currentOperation);
+    
+    // Update problem display
+    document.getElementById('practice-num1').textContent = currentProblem.num1;
+    document.getElementById('practice-num2').textContent = currentProblem.num2;
+    document.getElementById('practice-symbol').textContent = currentProblem.symbol;
+    
+    // Generate and display answer options
+    const options = generateAnswerOptions(currentProblem.answer, currentOperation);
+    const answersContainer = document.getElementById('practice-answers');
+    answersContainer.innerHTML = '';
+    
+    options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'answer-btn';
+        button.textContent = option;
+        button.onclick = () => handlePracticeAnswer(option);
+        answersContainer.appendChild(button);
+    });
+    
+    // Hide feedback and next button
+    document.getElementById('practice-feedback').textContent = '';
+    document.getElementById('practice-next-btn').style.display = 'none';
+}
+
+function handlePracticeAnswer(selectedAnswer) {
+    console.log('Practice answer selected:', selectedAnswer);
+    const isCorrect = selectedAnswer === currentProblem.answer;
+    const buttons = document.querySelectorAll('#practice-answers .answer-btn');
+    
+    buttons.forEach(button => {
+        button.classList.add('disabled');
+        const value = parseInt(button.textContent);
+        
+        if (value === currentProblem.answer) {
+            button.classList.add('correct');
+        } else if (value === selectedAnswer && !isCorrect) {
+            button.classList.add('incorrect');
+        }
+    });
+    
+    if (isCorrect) {
+        practiceScore++;
+        practiceStreak++;
+        document.getElementById('practice-feedback').textContent = '🎉 Correct! Great job!';
+        document.getElementById('practice-feedback').style.color = '#4CAF50';
+    } else {
+        practiceStreak = 0;
+        document.getElementById('practice-feedback').textContent = `❌ Incorrect. The answer is ${currentProblem.answer}`;
+        document.getElementById('practice-feedback').style.color = '#f44336';
+    }
+    
+    updatePracticeUI();
+    document.getElementById('practice-next-btn').style.display = 'block';
+}
+
+// Test mode functions
+function initializeTest() {
+    console.log('Initializing test');
+    testQuestions = [];
+    currentTestQuestion = 0;
+    testScore = 0;
+    
+    // Generate 10 random questions from all operations
+    const operations = ['addition', 'subtraction', 'multiplication', 'division'];
+    
+    for (let i = 0; i < 10; i++) {
+        const randomOperation = operations[Math.floor(Math.random() * operations.length)];
+        const problem = generateProblem(randomOperation);
+        problem.userAnswer = null;
+        problem.isCorrect = false;
+        testQuestions.push(problem);
+    }
+    
+    updateTestUI();
+    displayTestQuestion();
+}
+
+function updateTestUI() {
+    document.getElementById('test-current').textContent = currentTestQuestion + 1;
+    document.getElementById('test-total').textContent = testQuestions.length;
+    document.getElementById('test-score').textContent = testScore;
+}
+
+function displayTestQuestion() {
+    if (currentTestQuestion >= testQuestions.length) {
+        showTestResults();
+        return;
+    }
+    
+    console.log('Displaying test question:', currentTestQuestion + 1);
+    const problem = testQuestions[currentTestQuestion];
+    
+    // Update problem display
+    document.getElementById('test-num1').textContent = problem.num1;
+    document.getElementById('test-num2').textContent = problem.num2;
+    document.getElementById('test-symbol').textContent = problem.symbol;
+    
+    // Generate and display answer options
+    const options = generateAnswerOptions(problem.answer, problem.operation);
+    const answersContainer = document.getElementById('test-answers');
+    answersContainer.innerHTML = '';
+    
+    options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'answer-btn';
+        button.textContent = option;
+        button.onclick = () => handleTestAnswer(option);
+        answersContainer.appendChild(button);
+    });
+    
+    // Hide feedback and next button
+    document.getElementById('test-feedback').textContent = '';
+    document.getElementById('test-next-btn').style.display = 'none';
+    document.getElementById('test-results').style.display = 'none';
+}
+
+function handleTestAnswer(selectedAnswer) {
+    console.log('Test answer selected:', selectedAnswer);
+    const problem = testQuestions[currentTestQuestion];
+    const isCorrect = selectedAnswer === problem.answer;
+    const buttons = document.querySelectorAll('#test-answers .answer-btn');
+    
+    problem.userAnswer = selectedAnswer;
+    problem.isCorrect = isCorrect;
+    
+    buttons.forEach(button => {
+        button.classList.add('disabled');
+        const value = parseInt(button.textContent);
+        
+        if (value === problem.answer) {
+            button.classList.add('correct');
+        } else if (value === selectedAnswer && !isCorrect) {
+            button.classList.add('incorrect');
+        }
+    });
+    
+    if (isCorrect) {
+        testScore++;
+        document.getElementById('test-feedback').textContent = '✅ Correct!';
+        document.getElementById('test-feedback').style.color = '#4CAF50';
+    } else {
+        document.getElementById('test-feedback').textContent = `❌ Incorrect. The answer is ${problem.answer}`;
+        document.getElementById('test-feedback').style.color = '#f44336';
+    }
+    
+    updateTestUI();
+    
+    if (currentTestQuestion < testQuestions.length - 1) {
+        document.getElementById('test-next-btn').style.display = 'block';
+    } else {
+        setTimeout(showTestResults, 1500);
+    }
+}
+
+function nextTestQuestion() {
+    currentTestQuestion++;
+    displayTestQuestion();
+}
+
+function showTestResults() {
+    console.log('Showing test results. Score:', testScore);
+    document.getElementById('final-score').textContent = `Your Score: ${testScore}/10`;
+    document.getElementById('score-message').textContent = getScoreMessage(testScore);
+    document.getElementById('test-results').style.display = 'block';
+    
+    // Hide other test elements
+    document.querySelector('.test-info').style.display = 'none';
+    document.querySelector('.problem-container').style.display = 'none';
+    document.getElementById('test-answers').style.display = 'none';
+    document.getElementById('test-feedback').style.display = 'none';
+    document.getElementById('test-next-btn').style.display = 'none';
+}
+
+function getScoreMessage(score) {
+    if (score >= 9) return "🌟 Outstanding! You're a math superstar!";
+    if (score >= 7) return "🎉 Great job! You're doing really well!";
+    if (score >= 5) return "👍 Good work! Keep practicing!";
+    return "💪 Keep trying! Practice makes perfect!";
+}
+
+function restartTest() {
+    console.log('Restarting test');
+    // Show test elements again
+    document.querySelector('.test-info').style.display = 'flex';
+    document.querySelector('.problem-container').style.display = 'block';
+    document.getElementById('test-answers').style.display = 'grid';
+    document.getElementById('test-feedback').style.display = 'block';
+    
+    initializeTest();
+}
+
+
+</script>
+</body>
+</html>
