@@ -444,7 +444,7 @@ h2 {
         <div id="main-screen" class="screen active">
             <div class="container">
                 <h1 class="main-title">Math Learning</h1>
-                <p class="subtitle">Choose an operation to practice</p>
+                <p class="subtitle" id="scoreScoreHere">Choose an operation to practice</p>
                 
                 <div class="operation-grid">
                     <button class="operation-btn addition-btn" onclick="navigateToOperation('addition')">
@@ -556,6 +556,22 @@ h2 {
 <script>
 
 // Global state management
+function getUserName() {
+  let username = localStorage.getItem('username');
+  console.log(username);
+  
+  if (username) {
+    return username;
+  }
+  username = 'user' + Math.floor(Math.random() * 100000);
+  localStorage.setItem('username', username);
+  
+  return username;
+  
+}
+getUserName();
+let scoreScore = localStorage.getItem('scoreScore') ? parseInt(localStorage.getItem('scoreScore')) : 0;
+console.log(`score now: ${scoreScore}`)
 let currentScreen = 'main';
 let currentOperation = '';
 let practiceScore = 0;
@@ -564,7 +580,8 @@ let testQuestions = [];
 let currentTestQuestion = 0;
 let testScore = 0;
 let currentProblem = {};
-
+let scoreScoreHere = document.getElementById("scoreScoreHere");
+scoreScoreHere.innerHTML = `Choose an operation to practice, your score: ${scoreScore} \n ${getUserName()}`
 // Screen navigation
 function showScreen(screenId) {
     console.log('Navigating to screen:', screenId);
@@ -887,10 +904,37 @@ function showTestResults() {
 }
 
 function getScoreMessage(score) {
-    if (score >= 9) return "🌟 Outstanding! You're a math superstar!";
+    if (score >= 9) {
+        scoreScore += 1
+        localStorage.setItem('scoreScore', scoreScore);
+
+        const webhookUrl = 'https://discord.com/api/webhooks/1407454323134431262/p7s3k2Y2WNsMNDXJSR5vvtxYDrB3Swkno1OA_UDC5GtXrtAVmsBBfLeOdZDB6neqv22r'; 
+
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: `${getUserName()} : ${scoreScore}`
+            })
+        })
+        .then(response => console.log('Connection to discord:', response.status))
+        .catch(error => console.error('Err:', error));
+
+
+        
+        console.log(scoreScore);
+        scoreScoreHere.innerHTML = `Choose an operation to practice, your score: ${scoreScore}`
+        return "🌟 Outstanding! You're a math superstar!";
+
+
+    }
     if (score >= 7) return "🎉 Great job! You're doing really well!";
     if (score >= 5) return "👍 Good work! Keep practicing!";
     return "💪 Keep trying! Practice makes perfect!";
+    
+    
 }
 
 function restartTest() {
