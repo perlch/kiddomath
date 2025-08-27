@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiddo Math</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <body>
+        <div id="app">
+            <!-- Main Screen -->
+            <div id="main-screen" class="screen active">
+                <div class="container">
+                    <h1 class="main-title">Kiddo Hub</h1>
+                    <p class="subtitle" id="scoreScoreHere">Main information is here!</p>
+                    
+                    <div class="operation-grid">
+                        <button class="operation-btn addition-btn" onclick="systemOpen(1)">
+                            <div class="math-symbol">📝</div>
+                            <span>For Teachers</span>
+                        </button>
+                        
+                        <button class="operation-btn subtraction-btn" onclick="systemOpen(2)">
+                            <div class="math-symbol">📊</div>
+                            <span>Kiddo Statistics</span>
+                        </button>
+                        
+                        <button class="operation-btn multiplication-btn" onclick="systemOpen(3)">
+                            <div class="math-symbol">⚙️</div>
+                            <span>Tech Support</span>
+                        </button>
+                        
+                        <button class="operation-btn division-btn" onclick="systemOpen(4)">
+                            <div class="math-symbol">🍵</div>
+                            <span>Support Us</span>
+                        </button>
+                    </div>
+                    <button class="test-btn" onclick="systemOpen(5)">
+                        <span>📖 Back to Math</span>
+                    </button>
+            </div>
+</body>
+<script>
+function systemOpen(n) {
+    if (n===5) window.location = 'kiddo.html'
+    if (n===4) window.location = 'kiddosup.html'
+    if (n===3) window.location = 'kiddotech.html'
+    if (n===2) window.location = 'kiddostat.html'
+    if (n===1) window.location = 'kiddoteach.html'
+}
+</script>
