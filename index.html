@@ -168,7 +168,20 @@ function checkDayStreak() {
     }
     const minutesSomeDate = Math.floor(now.getTime() / 1000 / 60);
     console.log(`now: ${minutesSomeDate}`)
-    const isEqual = parseInt(savedMinutes)+2880 <= minutesSomeDate;
+    
+    if (parseInt(savedMinutes)+1440 <= minutesSomeDate) {
+        isEqual = true
+    }
+    if (!(parseInt(savedMinutes)+1440 <= minutesSomeDate)) {
+        isEqual = false
+    }
+    if (parseInt(savedMinutes)+2880 <= minutesSomeDate) {
+        console.log('BOOM')
+        dayStreak=0;
+        localStorage.setItem('dayStreak', dayStreak); 
+        updateMinutes()
+        localStorage.setItem('savedMinuteXs', savedMinutes); 
+    }
     console.log(isEqual); 
     if (isEqual) {
         dayStreak += 1
