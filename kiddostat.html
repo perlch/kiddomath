@@ -13,10 +13,30 @@
             <!-- Main Screen -->
             <div id="main-screen" class="screen active">
                 <div class="container">
-                    <h1 class="main-title">Hey :D</h1>
-                    <p class="subtitle" id="scoreScoreHere">We still working on this!</p>
+                    <h1 class="main-title">Your Statistics :D</h1>
+                    <p class="subtitle" id="scoreScoreHere"></p>
                     
-                
+                    <div class="operation-grid">
+                        <div class="operation-btn addition-btn">
+                            <div class="math-symbol" id="dayHere">🔥</div>
+                            <span>Your Day Streak</span>
+                        </div>
+                        
+                        <div class="operation-btn subtraction-btn">
+                            <div class="math-symbol" id="lastHere">📆</div>
+                            <span>Streak Update Day</span>
+                        </div>
+                        
+                        <div class="operation-btn multiplication-btn">
+                            <div class="math-symbol" id="sumHere">🧮</div>
+                            <span>Total Test Count</span>
+                        </div>
+                        
+                        <div class="operation-btn division-btn">
+                            <div class="math-symbol" id="totalHere">📈</div>
+                            <span>Total Score</span>
+                        </div>
+                    </div>
                     
                     
                     <br><br>
@@ -29,7 +49,58 @@
     
         </body>
 <script>
+let scoreScore = localStorage.getItem('scoreScore') ? parseInt(localStorage.getItem('scoreScore')) : 0;
+let totalScore = localStorage.getItem('totalScore') ? parseInt(localStorage.getItem('totalScore')) : 0;
+let dayStreak = localStorage.getItem('dayStreak') ? parseInt(localStorage.getItem('dayStreak')) : 0;
+let savedMinutes = localStorage.getItem('savedMinutes');
+//🔥📆🧮📈
+let usernameOutput = document.getElementById("scoreScoreHere");
+let dayHere = document.getElementById("dayHere");
+let lastHere = document.getElementById("lastHere");
+let sumHere = document.getElementById("sumHere");
+let totalHere = document.getElementById("totalHere");
+
+function minutesToDate(minutes) {
+    const date = new Date(minutes * 60 * 1000);
+    
+    const day = date.getDate();
+    const month = date.toLocaleString('en-GB', { month: 'long' });
+    const year = date.getFullYear();
+
+    return `${day} 📆 ${month}`;
+}
+
+
+
+
+console.log(minutesToDate(savedMinutes)); 
+
+
+dayHere.innerHTML = `${dayStreak}🔥`
+sumHere.innerHTML = `${scoreScore}🧮`;
+totalHere.innerHTML = `${totalScore}📈`
+lastHere.innerHTML = `${minutesToDate(savedMinutes)}`
 function systemOpen(n) {
     if (n===5) window.location = 'kiddohub.html'
 }
+
+
+function getUserName() {
+  let username = localStorage.getItem('username');
+  console.log(username);
+  
+  if (username) {
+    return username;
+  }
+  username = 'user' + Math.floor(Math.random() * 100000);
+  localStorage.setItem('username', username);
+  
+  return username;
+  
+}
+getUserName();
+usernameOutput.innerHTML = getUserName();
+
+
+
 </script>
