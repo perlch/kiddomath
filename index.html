@@ -147,6 +147,42 @@ function getUserName() {
   
 }
 getUserName();
+
+let dayStreak = localStorage.getItem('dayStreak') ? parseInt(localStorage.getItem('dayStreak')) : 0;
+console.log(`days: ${dayStreak}`)
+function checkDayStreak() {
+    let now = new Date();
+    const minutesNow = Math.floor(now.getTime() / 1000 / 60);
+    let savedMinutes = localStorage.getItem('savedMinutes');
+    if (!savedMinutes) {
+        localStorage.setItem('savedMinutes', minutesNow);
+    }
+    savedMinutes = localStorage.getItem('savedMinutes');
+    console.log(`saved: ${savedMinutes}`); 
+
+    function updateMinutes() {
+        let now = new Date();
+        const minutesNow = Math.floor(now.getTime() / 1000 / 60);
+        localStorage.setItem('savedMinutes', minutesNow);
+        console.log('NEW TIME:', minutesNow);
+    }
+    const minutesSomeDate = Math.floor(now.getTime() / 1000 / 60);
+    console.log(`now: ${minutesSomeDate}`)
+    const isEqual = parseInt(savedMinutes)+2880 <= minutesSomeDate;
+    console.log(isEqual); 
+    if (isEqual) {
+        dayStreak += 1
+        localStorage.setItem('dayStreak', dayStreak); 
+        updateMinutes()
+        localStorage.setItem('savedMinuteXs', savedMinutes); 
+    }
+    else {
+        console.log('day still running')
+    }
+}
+
+checkDayStreak();
+let totalScore = localStorage.getItem('totalScore') ? parseInt(localStorage.getItem('totalScore')) : 0;
 let scoreScore = localStorage.getItem('scoreScore') ? parseInt(localStorage.getItem('scoreScore')) : 0;
 console.log(`score now: ${scoreScore}`)
 let currentScreen = 'main';
@@ -482,6 +518,8 @@ function showTestResults() {
 
 function getScoreMessage(score) {
     if (score >= 9) {
+        totalScore+=score
+        localStorage.setItem('totalScore', totalScore);
         scoreScore += 1
         localStorage.setItem('scoreScore', scoreScore);
 
@@ -504,11 +542,21 @@ function getScoreMessage(score) {
         console.log(scoreScore);
         scoreScoreHere.innerHTML = `Choose an operation to practice, your score: ${scoreScore}`
         return "🌟 Outstanding! You're a math superstar!";
-
+        checkDayStreak();
 
     }
-    if (score >= 7) return "🎉 Great job! You're doing really well!";
-    if (score >= 5) return "👍 Good work! Keep practicing!";
+    if (score >= 7) {
+        totalScore+=score
+        localStorage.setItem('totalScore', totalScore);
+        return "🎉 Great job! You're doing really well!";
+        checkDayStreak();
+    }
+    if (score >= 5) {
+        totalScore+=score
+        localStorage.setItem('totalScore', totalScore);
+        return "👍 Good work! Keep practicing!";
+        checkDayStreak();
+    }
     return "💪 Keep trying! Practice makes perfect!";
     
     
