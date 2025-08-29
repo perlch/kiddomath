@@ -75,8 +75,12 @@ function minutesToDate(minutes) {
 
 console.log(minutesToDate(savedMinutes)); 
 
-
-dayHere.innerHTML = `${dayStreak}🔥`
+if (dayStreak===0) {
+    dayHere.innerHTML = `${dayStreak}`
+}
+else {
+    dayHere.innerHTML = `${dayStreak}🔥`
+}
 sumHere.innerHTML = `${scoreScore}🧮`;
 totalHere.innerHTML = `${totalScore}📈`
 lastHere.innerHTML = `${minutesToDate(savedMinutes)}`
